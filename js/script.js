@@ -17,10 +17,10 @@ $( document ).ready(function() {
    $("#credit-card").next().next().hide();
    $("#colors-js-puns").hide();
 });
-// DISPLAY THE OTHER-TITLE INPUT WHEN THE "Other" OPTION IS SELECTED
+// DISPLAY THE OTHER-TITLE INPUT WHEN THE "Other" OPTION IS SELECTED -- 
 
 
-    $("#title").change(function(e){
+    $("#title").change(function(e){ // a click function will not work on select option
         $("#title option").each(function(){
             if($(this).is(":selected")&& $(this).attr('value')=="other"){
                 $("#other-title").show();
