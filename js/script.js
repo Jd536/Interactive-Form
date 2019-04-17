@@ -32,9 +32,9 @@ $( document ).ready(function() {
 });
 
 //  DISPLAY RELATED COLOR OPTION ONLY WHEN A SPECIFIC DESIGN IS SELECTED/ HIDE THE COLOR DIV UNLESS A DESIN IS SELECTED
-$("#design option").each(function(){
-    $(this).click(function(){
-        if($(this).attr('value')=="js puns"){
+$("#design").change(function(){
+    $("#design option").each(function(){
+        if($(this).attr('value')=="js puns" && $(this).is(":selected")){
             colors.show();
             $("#color option[value='cornflowerblue']").show();
             $("#color option[value='darkslategrey']").show();
@@ -42,7 +42,7 @@ $("#design option").each(function(){
             $("#color option[value='tomato']").hide();
             $("#color option[value='steelblue']").hide();
             $("#color option[value='dimgrey']").hide();
-        } else if($(this).attr('value')!="heart js"){
+        }if($(this).attr('value')=="heart js" && $(this).is(":selected")){
             colors.show();
             $("#color option[value='cornflowerblue']").hide();
             $("#color option[value='darkslategrey']").hide();
@@ -55,6 +55,9 @@ $("#design option").each(function(){
         }
     });
 });
+
+
+
 var all = $(".activities input[name='js-frameworks']");
 var frameworks = $(".activities input[name='js-frameworks']");
 var express = $(".activities input[name='express']");
