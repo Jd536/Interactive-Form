@@ -7,7 +7,7 @@ let zipCode = $("#zip");
 let cvv = $("#cvv");
 let totalCost=0;
 let colors = $("#colors-js-puns");
-
+let cardNumberDiv = $("#credit-card div").eq(0);
 $( document ).ready(function() {
    name.focus();
    $("#other-title").hide();
@@ -18,17 +18,17 @@ $( document ).ready(function() {
    $("#colors-js-puns").hide();
 });
 // DISPLAY THE OTHER-TITLE INPUT WHEN THE "Other" OPTION IS SELECTED
-$("#title option").each(function(){
-    if($(this).attr('value')=="other"){
-       $(this).click(function(){
-        $("#other-title").show();
-    });
-    }else if($(this).attr('value')!="other"){
-        $(this).click(function(){
-            $("#other-title").hide();
-        });
-    }
 
+
+    $("#title").change(function(e){
+        $("#title option").each(function(){
+            if($(this).is(":selected")&& $(this).attr('value')=="other"){
+                $("#other-title").show();
+            }else if($(this).is(":selected")&& $(this).attr('value')!="other"){
+                $("#other-title").hide();
+            }
+        });
+      
 });
 
 //  DISPLAY RELATED COLOR OPTION ONLY WHEN A SPECIFIC DESIGN IS SELECTED/ HIDE THE COLOR DIV UNLESS A DESIN IS SELECTED
@@ -119,31 +119,38 @@ let alerts=$("<span></span>");
 
 cardValue = creditCard.val();
     $("#payment").change(function(){
+
             $(this).click(function(){
-               if(creditCard.change().is(":selected")){
+                
+               if(creditCard.is(":selected")){
                    $("#credit-card").next().hide();  
                    $("#credit-card").next().next().hide();  
                    $("#credit-card").show();
-               }if(creditCard.change().not(":selected")){
-                   $("#credit-card").next().show();  
-                   $("#credit-card").next().next().show();  
-               }
-       
-               if(payPal.change().is(":selected")){
+
+               }   
+               if(payPal.is(":selected")){
                    $("#credit-card").next().show();
                    $("#credit-card").next().next().hide(); 
                    $("#credit-card").hide();
-               }else if(payPal.change().not(":selected")){
-                   $("#credit-card").next().hide(); 
-               }
-               
-               if(Bitcoin.change().is(":selected")){
+               }               
+               if(Bitcoin.is(":selected")){
                    $("#credit-card").next().next().show();
+                   $("#credit-card").next().hide();
                    $("#credit-card").hide();
-               }else if(Bitcoin.change().not(":selected")){
-                   $("#credit-card").next().next().hide();
-                   }
+               }
             });  
+            if(cardNumber.val()=="" && creditCard.is(":selected")){
+                alerts.text("Please enter a credit card number.");
+                alerts.css("color", "red");
+                cardNumberDiv.append(alerts);
+                cardNumber.keyup(function(){
+                    alerts.hide();
+                   if(cardNumber.val().length==10){
+                       alerts.text("Please enter a number that is between 13 and 16 digits long.");
+                       alerts.show();
+                }
+            });
+            } 
       });    
 
 
@@ -180,3 +187,14 @@ cardValue = creditCard.val();
     cvv.keyup(function(){
         validate(cvv,regexS.cvv);
     });
+
+    // ALERTS on submit
+    $("form").submit(function(event){
+            validate(name,regexS.name);
+            validate(email,regexS.email);
+            validate(cardNumber,regexS.card);
+            validate(zipCode,regexS.zip);      
+            validate(cvv,regexS.cvv);
+            event.preventDefault();
+    });
+  
