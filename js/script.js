@@ -36,18 +36,23 @@ $("#design").change(function(){
     $("#design option").each(function(){
         if($(this).attr('value')=="js puns" && $(this).is(":selected")){
             colors.show();
+            $("#color option[value='tomato']").attr("selected",false);
+            $("#color option[value='cornflowerblue']").attr("selected",true);
             $("#color option[value='cornflowerblue']").show();
             $("#color option[value='darkslategrey']").show();
             $("#color option[value='gold']").show();
             $("#color option[value='tomato']").hide();
             $("#color option[value='steelblue']").hide();
             $("#color option[value='dimgrey']").hide();
-        }if($(this).attr('value')=="heart js" && $(this).is(":selected")){
+        }else if($(this).attr('value')=="heart js" && $(this).is(":selected")){
             colors.show();
+            $("#color option[value='cornflowerblue']").attr("selected",false);
+            $("#color option[value='tomato']").attr("selected",true);            
             $("#color option[value='cornflowerblue']").hide();
             $("#color option[value='darkslategrey']").hide();
             $("#color option[value='gold']").hide();
             $("#color option[value='tomato']").show();
+           
             $("#color option[value='steelblue']").show();
             $("#color option[value='dimgrey']").show();
         } if($(this).text()=="Select Theme"){
@@ -156,9 +161,21 @@ cardValue = creditCard.val();
             } 
       });    
 
-
+      
       // FORM VALIDATION
-
+      let statusMessage=$("<span></span>").css("color","red");
+      statusMessage.css({'border-radius':'5px',
+        'border':'blue solid 1px',
+        'background-color':'white',
+        padding:'3px',
+        right:'0',
+        'margin-left':'50%',
+        'margin-bottom':'3px',
+        'position':"absolute",
+        display:'inline-block',
+        'z-index':'2'
+        });
+     
       const regexS = {
           name:/^[a-zA-Z ]{2,30}$/,
           email:/^[^@]+@[^@.]+\.[a-z]+$/,
@@ -166,38 +183,66 @@ cardValue = creditCard.val();
           zip:/^\d{5}$/,
           cvv:/^\d{3}$/
       }
-      function validate(field,regex){
-        if(regex.test(field.val())){
-            field.css("border", "blue solid 2px");
-        }else{
+      function validate(field,regex,stats){
+        if(regex.test(field.val())==false){
             field.css("border", "tomato solid 2px");
+            stats.insertBefore(field);
+            field.blur(function(){
+                stats.remove();
+            })
+        }if(regex.test(field.val())==true){
+            field.css("border", "green solid 2px");
+            stats.remove();
+            field.blur(function(){
+                stats.remove();
+            })
         }
+ 
       }
 
      
     name.keyup(function(){
-        validate(name,regexS.name);
+        statusMessage.text("Only letters are allowed!");
+        validate(name,regexS.name, statusMessage);
     });
     email.keyup(function(){
-        validate(email,regexS.email);
+        statusMessage.text("Enter a valid email address.");
+        validate(email,regexS.email,statusMessage);
     });
     cardNumber.keyup(function(){
-        validate(cardNumber,regexS.card);
+        statusMessage.text("should contains 13-16 numbers");
+        validate(cardNumber,regexS.card, statusMessage);
     });
     zipCode.keyup(function(){
-        validate(zipCode,regexS.zip);
+        statusMessage.text("Zipcode format \"00000\"");
+        validate(zipCode,regexS.zip, statusMessage);
     });
     cvv.keyup(function(){
-        validate(cvv,regexS.cvv);
+        statusMessage.text("Contains 3 digits");
+        validate(cvv,regexS.cvv, statusMessage);
     });
 
     // ALERTS on submit
+
     $("form").submit(function(event){
-            validate(name,regexS.name);
-            validate(email,regexS.email);
-            validate(cardNumber,regexS.card);
-            validate(zipCode,regexS.zip);      
-            validate(cvv,regexS.cvv);
+        let alert = $("<p></p>").text("Please select at least one activity").css("color","red");
+       let validateOnSubmit = function (field,regex){
+            if(regex.test(field.val())){
+                field.css("border", "blue solid 2px");
+            }else{
+                field.css("border", "tomato solid 2px");
+                event.preventDefault();
+            }
+          } 
+          if($(".activities input:checked").length==0){
             event.preventDefault();
+            $(".activities").prepend(alert);
+        }
+          validateOnSubmit(name,regexS.name);
+          validateOnSubmit(email,regexS.email);
+          validateOnSubmit(cardNumber,regexS.card);
+          validateOnSubmit(zipCode,regexS.zip);
+          validateOnSubmit(cvv,regexS.cvv);
+
     });
-  
+    console.log();
