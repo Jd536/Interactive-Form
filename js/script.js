@@ -123,13 +123,18 @@ checkboxes.each(function(index){
 let creditCard=$("#payment option[value='credit card']");
 let Bitcoin = $("#payment option[value='bitcoin']");
 let payPal = $("#payment option[value='paypal']");
+let selectMethod = $("#payment option[value='select_method']");
 let alerts=$("<span></span>");
 
 cardValue = creditCard.val();
     $("#payment").change(function(){
 
             $(this).click(function(){
-                
+               if (selectMethod.is(":selected")){
+                $("#credit-card").next().hide();  
+                $("#credit-card").next().next().hide();  
+                $("#credit-card").hide();
+               }
                if(creditCard.is(":selected")){
                    $("#credit-card").next().hide();  
                    $("#credit-card").next().next().hide();  
@@ -229,13 +234,13 @@ cardValue = creditCard.val();
        let validateOnSubmit = function (field,regex){
             if(regex.test(field.val())){
                 field.css("border", "blue solid 2px");
-            }else{
+            }else if(regex.test(field.val())==false&& creditCard.is(":selected")){
                 field.css("border", "tomato solid 2px");
                 event.preventDefault();
             }
           } 
           if($(".activities input:checked").length==0){
-            event.preventDefault();
+            // event.preventDefault();
             $(".activities").prepend(alert);
         }
           validateOnSubmit(name,regexS.name);
